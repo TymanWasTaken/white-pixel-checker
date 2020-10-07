@@ -1,0 +1,17 @@
+{
+  "name": "whiteimg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bot.js"
+  },
+  "author": "Tyman#8913",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "express": "^4.17.1",
+    "jimp": "^0.16.1"
+  }
+}
