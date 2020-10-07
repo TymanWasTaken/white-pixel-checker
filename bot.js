@@ -5,8 +5,12 @@ const Jimp = require('jimp');
 const client = new Discord.Client();
 var args = process.argv.slice(2);
 
+function isDev() {
+	return args[0] === "dev";
+}
+
 function log(text) {
-	if (args[0] === "dev") {
+	if (isDev()) {
 		console.log(text);
 	}
 }
@@ -57,44 +61,55 @@ client.on('message', msg => {
 					var curX = 0;
 					var curY = 0;
 					var whites = 0;
-					var t = 0;
-					var rs = [];
-					var gs = [];
-					var bs = [];
-					var alls = [];
-					start = new Date();
+					// All of these are not necissary, just looging so only run them if isDev()
+					if (isDev()) {
+						var rs = [];
+						var gs = [];
+						var bs = [];
+						var alls = [];
+						start = new Date();
+					}
+					// Loop through all pixels looking for white ones, maybe skip pixels later
 					for (i = 0; i < pixels; i++) {
 						col = Jimp.intToRGBA(image.getPixelColor(curX, curY));
-						rs.push(col.r);
-						gs.push(col.g);
-						bs.push(col.b);
-						alls.push(col);
+						if (isDev()) {
+							// Same as line 64
+							rs.push(col.r);
+							gs.push(col.g);
+							bs.push(col.b);
+							alls.push(col);
+						}
+						
 						if (col.r === 255 && col.g === 255 && col.b === 255) {
 							whites++;
 						}
 						curX++;
 						if (curX >= image.bitmap.width) {
-							t = curX;
 							curY++;
 							curX = 0;
 						}
 					}
-					end = new Date();
-					common = mode(alls);
-					log("----------------------------------------------------------------");
-					log("Image sent:\n")
-					log(`Average color of all pixels: ${avg(rs)}, ${avg(gs)}, ${avg(bs)}`)
-					log(`Mode color of all pixels: ${common.r}, ${common.g}, ${common.b}`)
-					log(`${whites} White pixels detected!`);
-					log(`Image size: ${image.bitmap.height}x${image.bitmap.width}`)
-					log(`Total pixels: ${pixels}`);
-					log(`Percentage of pixels white: ${Math.round((whites / pixels) * 100)}%`)
+					// Logging if in dev mode
+					if (isDev()) {
+						end = new Date();
+						common = mode(alls);
+						log("----------------------------------------------------------------");
+						log("Image sent:\n")
+						log(`Average color of all pixels: ${avg(rs)}, ${avg(gs)}, ${avg(bs)}`)
+						log(`Mode color of all pixels: ${common.r}, ${common.g}, ${common.b}`)
+						log(`${whites} White pixels detected!`);
+						log(`Image size: ${image.bitmap.height}x${image.bitmap.width}`)
+						log(`Total pixels: ${pixels}`);
+						log(`Percentage of pixels white: ${Math.round((whites / pixels) * 100)}%`)
+					}
 					// Check for 50% or more of white pixels
 					if (Math.round((whites / pixels) * 100) >= 50) {
 						msg.reply("Please check make sure to check <#730330815405228032>!");
 					}
-					log(`Time taken to calculate: ${end - start}ms`);
-					log("----------------------------------------------------------------")
+					if (isDev()) {
+						log(`Time taken to calculate: ${end - start}ms`);
+						log("----------------------------------------------------------------")
+					}
 				});
 		}
 	});
