@@ -1,3 +1,4 @@
+require('dotenv').config()
 const Discord = require('discord.js');
 const { color } = require('jimp');
 const Jimp = require('jimp');
@@ -100,4 +101,4 @@ client.on('message', msg => {
   }
 });
 
-client.login('NzYzMjEzMDcwOTU5OTAyNzYx.X30bjw.qmvaimXm0FVK8CMTlqbuFINYwhE');
+client.login(process.env.TOKEN);
